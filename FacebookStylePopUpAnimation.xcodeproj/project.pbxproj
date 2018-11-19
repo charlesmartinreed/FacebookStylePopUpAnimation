@@ -22,6 +22,7 @@
 		8C1F67E421A37A4B00E134EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C1F67E721A37A4B00E134EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8C1F67E921A37A4B00E134EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8C1F67EF21A37A6200E134EB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 				8C1F67E421A37A4B00E134EB /* Assets.xcassets */,
 				8C1F67E621A37A4B00E134EB /* LaunchScreen.storyboard */,
 				8C1F67E921A37A4B00E134EB /* Info.plist */,
+				8C1F67EF21A37A6200E134EB /* README.md */,
 			);
 			path = FacebookStylePopUpAnimation;
 			sourceTree = "<group>";
