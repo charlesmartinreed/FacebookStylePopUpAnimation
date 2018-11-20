@@ -41,8 +41,8 @@ class ViewController: UIViewController {
         
         //mapping an array generates another array, which we use in kind to grab the backgroundColor property
         
-        let iconHeight: CGFloat = 50
-        let padding: CGFloat = 8
+        let iconHeight: CGFloat = 38
+        let padding: CGFloat = 6
         
         //MARK:-Images Map
         //image literals are a little fucked in Xcode 10
@@ -51,6 +51,7 @@ class ViewController: UIViewController {
         let arrangedSubviews = images.map({ (image) -> UIView in
             let imageView = UIImageView(image: image)
             imageView.layer.cornerRadius = iconHeight / 2
+            imageView.isUserInteractionEnabled = true //without this, hit testing will not work
             return imageView
         })
         
@@ -111,8 +112,52 @@ class ViewController: UIViewController {
         if gesture.state == .began {
             handleGestureBegan(gesture: gesture)
         } else if gesture.state == .ended {
-            //remove the previously animated view
-            iconsContainerView.removeFromSuperview()
+            
+            //clean up the animation by returning to identity
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                //using .identity to smoothly return the icons to their original positioning as we cycle through the hitTest
+                let stackView = self.iconsContainerView.subviews.first
+                stackView?.subviews.forEach({ (imageView) in
+                    imageView.transform = .identity
+                })
+                
+                self.iconsContainerView.transform.translatedBy(x: 0, y: 50)
+                self.iconsContainerView.alpha = 0
+                
+            }) { (_) in
+                self.iconsContainerView.removeFromSuperview()
+            }
+            
+            //iconsContainerView.removeFromSuperview()
+            
+        } else if gesture.state == .changed {
+            handleGestureChanged(gesture: gesture)
+        }
+    }
+    
+    fileprivate func handleGestureChanged(gesture: UILongPressGestureRecognizer) {
+        let pressedLocation = gesture.location(in: self.iconsContainerView)
+        print(pressedLocation)
+        
+        //enables us to interact with the emojis on a much taller bounds
+        let fixedYLocation = CGPoint(x: pressedLocation.x, y: self.iconsContainerView.frame.height / 2)
+        
+        //figure out which emoji is being "touched"
+        //returns deepest descendent subview
+        //here, our pressedLocation is relative to the iconsContainerView rather than the superview
+        let hitTestView = iconsContainerView.hitTest(fixedYLocation, with: nil)
+        
+        if hitTestView is UIImageView {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                
+                //using .identity to smoothly return the icons to their original positioning as we cycle through the hitTest
+                let stackView = self.iconsContainerView.subviews.first
+                stackView?.subviews.forEach({ (imageView) in
+                    imageView.transform = .identity
+                })
+                
+                hitTestView?.transform = CGAffineTransform(translationX: 0, y: -50)
+            })
         }
     }
     
