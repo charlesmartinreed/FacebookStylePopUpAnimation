@@ -9,14 +9,14 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     //MARK:- Application Background Properties
     
     //not currently using this since I don't have the BG that Brian uses in the demo video...
-//    let bgImageView: UIImageView = {
-//        let imageView = UIImageView(image: "")
-//        return imageView
-//    }()
+    //    let bgImageView: UIImageView = {
+    //        let imageView = UIImageView(image: "")
+    //        return imageView
+    //    }()
     
     //MARK:- Emoji Icon Container View Properties
     let iconsContainerView: UIView = {
@@ -24,43 +24,81 @@ class ViewController: UIViewController {
         containerView.backgroundColor = .white
         
         //let's add some subviews for the emojis
-        let redView = UIView()
-        redView.backgroundColor = .red
-        
-        let blueView = UIView()
-        blueView.backgroundColor = .blue
+        //        let redView = UIView()
+        //        redView.backgroundColor = .red
+        //
+        //        let blueView = UIView()
+        //        blueView.backgroundColor = .blue
+        //
+        //        let yellowView = UIView()
+        //        yellowView.backgroundColor = .yellow
+        //
+        //        let orangeView = UIView()
+        //        orangeView.backgroundColor = .orange
         
         //add those subviews to the stack view
-        let arrangedSubviews = [redView, blueView]
+        //let arrangedSubviews = [redView, blueView, yellowView, orangeView]
+        
+        //mapping an array generates another array, which we use in kind to grab the backgroundColor property
+        
+        let iconHeight: CGFloat = 50
+        let padding: CGFloat = 8
+        
+        //MARK:-Images Map
+        //image literals are a little fucked in Xcode 10
+        let images = [#imageLiteral(resourceName: "like.png"),#imageLiteral(resourceName: "love.png"),#imageLiteral(resourceName: "haha.png"), #imageLiteral(resourceName: "smiling.png"),#imageLiteral(resourceName: "surprised.png"),#imageLiteral(resourceName: "sad.png"),#imageLiteral(resourceName: "angry.png")]
+        
+        let arrangedSubviews = images.map({ (image) -> UIView in
+            let imageView = UIImageView(image: image)
+            imageView.layer.cornerRadius = iconHeight / 2
+            return imageView
+        })
+        
+        //MARK:-Subview Map
+//        let arrangedSubviews = [UIColor.red, .blue, .yellow, .orange, .green].map({ (color) -> UIView in
+//            let v = UIView()
+//            v.backgroundColor = color
+//            v.layer.cornerRadius = iconHeight / 2 //creates a circular subview
+//            return v
+//        })
+        
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         
         //MARK:- Stack View Properties
         stackView.distribution = .fillEqually
-        let padding: CGFloat = 8
+        
         stackView.spacing = padding
         stackView.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
         stackView.isLayoutMarginsRelativeArrangement = true
         
         containerView.addSubview(stackView)
-        containerView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+        let numIcons = CGFloat(arrangedSubviews.count)
+        let width = numIcons * iconHeight + (numIcons + 1) * padding
+        
+        containerView.frame = CGRect(x: 0, y: 0, width: width, height: iconHeight + 2 * padding)
+        containerView.layer.cornerRadius = containerView.frame.height / 2 //rounded
+        
         stackView.frame = containerView.frame
         
-        
-        
+        //MARK:- ContainerView Shadow
+        containerView.layer.shadowColor = UIColor(white: 0.4, alpha: 0.4).cgColor
+        containerView.layer.shadowRadius = 8
+        containerView.layer.shadowOpacity = 0.5
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 4) //down 4 pixels
         
         return containerView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        view.addSubview(bgImageView)
-//        bgImageView.frame = view.frame
+        //        view.addSubview(bgImageView)
+        //        bgImageView.frame = view.frame
         
         setupLongPressGesture()
         
     }
-
+    
     //MARK:- Gesture methods
     fileprivate func setupLongPressGesture() {
         
@@ -71,7 +109,7 @@ class ViewController: UIViewController {
         //print("Long pressed", Date()) //logs a date when we press, and a date when we release.
         
         if gesture.state == .began {
-           handleGestureBegan(gesture: gesture)
+            handleGestureBegan(gesture: gesture)
         } else if gesture.state == .ended {
             //remove the previously animated view
             iconsContainerView.removeFromSuperview()
@@ -102,7 +140,7 @@ class ViewController: UIViewController {
             
         })
     }
-
+    
     // won't do much until we get the background up
     override var prefersStatusBarHidden: Bool { return true }
 }
