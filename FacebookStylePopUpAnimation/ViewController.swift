@@ -21,9 +21,32 @@ class ViewController: UIViewController {
     //MARK:- Emoji Icon Container View Properties
     let iconsContainerView: UIView = {
         let containerView = UIView()
-        containerView.backgroundColor = .red
+        containerView.backgroundColor = .white
         
+        //let's add some subviews for the emojis
+        let redView = UIView()
+        redView.backgroundColor = .red
+        
+        let blueView = UIView()
+        blueView.backgroundColor = .blue
+        
+        //add those subviews to the stack view
+        let arrangedSubviews = [redView, blueView]
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        
+        //MARK:- Stack View Properties
+        stackView.distribution = .fillEqually
+        let padding: CGFloat = 8
+        stackView.spacing = padding
+        stackView.layoutMargins = UIEdgeInsets(top: padding, left: padding, bottom: padding, right: padding)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        
+        containerView.addSubview(stackView)
         containerView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+        stackView.frame = containerView.frame
+        
+        
+        
         
         return containerView
     }()
